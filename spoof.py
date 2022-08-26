@@ -88,7 +88,7 @@ if (__name__ == "__main__"):
                 max=0
         for i in range(min,max+1,1):
             list_port.append(i)
-    if (temp == "2"):
+    elif (temp == "2"):
         list_port=[int(i) for i in input(f"\n{bcolors.YELLOW}Example: {bcolors.GREEN}22 80 443 3306 3389\n{bcolors.CYAN}Input port: {bcolors.GREEN}").split()]
     start(list_port)
 
