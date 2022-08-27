@@ -3,15 +3,14 @@ from time import sleep
 from threading import Thread
 import socket
 import signal
-
-global HOST, pid
+global HOST, pid, count
 # Use 127.0.0.1 for Private, 0.0.0.0 for Public
 HOST = '0.0.0.0'
 pid = getpid()
 list_port=[]
+count=0
 min=0
 max=0
-
 def kill_process():
     print(f"\n{bcolors.RED}Closing process....{bcolors.ENDC}")
     if hasattr(signal, 'SIGKILL'):
@@ -19,18 +18,22 @@ def kill_process():
     else:
         kill(pid, signal.SIGABRT)
     exit()
-
 def open_port(port):
+    global count
     soc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         soc.bind((HOST, port))
         soc.listen(9)
         while 1:
             a,b = soc.accept()
-            print(f"{bcolors.YELLOW}Port {port} | Accept: {b[0]}")
-    except:
-        pass
-
+            count+=1
+            print(f"{bcolors.YELLOW}{count}. Port {port} | Accept: {b[0]}{bcolors.ENDC}")
+    except PermissionError:
+        print(f"{bcolors.RED}ERROR: Port {port} cannot be spoof! Need root!!{bcolors.ENDC}")
+        return
+    except OSError as e:
+        print(f"{bcolors.RED}ERROR: Port {port} | {e}{bcolors.ENDC}")
+        return
 def start(list_port):
     print(f"\n{bcolors.YELLOW}- Starting spoof port...{bcolors.ENDC}")
     for port in list_port:
@@ -38,13 +41,13 @@ def start(list_port):
             Thread(target=open_port, args=(port,)).start()
         except KeyboardInterrupt:
             kill_process()
+    sleep(2)
     while 1:
         try:
-            print(f"{bcolors.ENDC}Keep spoof running...")
+            print(f"{bcolors.ENDC}Keep spoof running... [Ctrl + C] to exit")
             sleep(500)
         except KeyboardInterrupt:
             kill_process()
-
 if (__name__ == "__main__"):
     while 1:
         print(f"Use color? [Y/n]: ", end="")
@@ -91,4 +94,3 @@ if (__name__ == "__main__"):
     elif (temp == "2"):
         list_port=[int(i) for i in input(f"\n{bcolors.YELLOW}Example: {bcolors.GREEN}22 80 443 3306 3389\n{bcolors.CYAN}Input port: {bcolors.GREEN}").split()]
     start(list_port)
-
