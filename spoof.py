@@ -1,16 +1,4 @@
-from os import kill, getpid
-from time import sleep
-from threading import Thread
-import socket
-import signal
-global HOST, pid, count
-# Use 127.0.0.1 for Private, 0.0.0.0 for Public
-HOST = '0.0.0.0'
-pid = getpid()
-list_port=[]
-count=0
-min=0
-max=0
+#!/bin/python3
 def kill_process():
     print(f"\n{bcolors.RED}Closing process....{bcolors.ENDC}")
     if hasattr(signal, 'SIGKILL'):
@@ -28,6 +16,7 @@ def open_port(port):
             a,b = soc.accept()
             count+=1
             print(f"{bcolors.YELLOW}{count}. Port {port} | Accept: {b[0]}{bcolors.ENDC}")
+            sleep(0.2) # only accept 1 client on 0.2 seconds (to prevent full load cpu when having ddos)
     except PermissionError:
         print(f"{bcolors.RED}ERROR: Port {port} cannot be spoof! Need root!!{bcolors.ENDC}")
         return
@@ -49,6 +38,18 @@ def start(list_port):
         except KeyboardInterrupt:
             kill_process()
 if (__name__ == "__main__"):
+    from os import kill, getpid
+    from time import sleep
+    from threading import Thread
+    import socket, signal
+    global HOST, pid, count
+    # Use 127.0.0.1 for Private, 0.0.0.0 for Public
+    HOST = '0.0.0.0'
+    pid = getpid()
+    list_port=[]
+    count=0
+    min=0
+    max=0
     while 1:
         print(f"Use color? [Y/n]: ", end="")
         temp=str(input())
