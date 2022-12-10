@@ -16,7 +16,7 @@ def open_port(port):
             a,b = soc.accept()
             count+=1
             print(f"{bcolors.YELLOW}{count}. Port {port} | Accept: {b[0]}{bcolors.ENDC}")
-            sleep(0.2) # only accept 1 client on 0.2 seconds (to prevent full load cpu when having ddos)
+            sleep(0.1) # only accept 1 client on 0.2 seconds (to prevent full load cpu when having ddos)
     except PermissionError:
         print(f"{bcolors.RED}ERROR: Port {port} cannot be spoof! Need root!!{bcolors.ENDC}")
         return
